@@ -57,14 +57,19 @@ sys_sleep(void)
   argint(0, &n);
   if(n < 0)
     n = 0;
+  // 全局的自旋锁 保护全局变量 ticks
   acquire(&tickslock);
+  // ticks 计数器 操作系统启动以来的时钟中断次数
   ticks0 = ticks;
+  printf("sys_sleep: n=%d, ticks0=%d, ticks=%d\n", n, ticks0, ticks);
   while(ticks - ticks0 < n){
     if(killed(myproc())){
       release(&tickslock);
       return -1;
     }
+    // ticks在chan上sleeping 并释放tickslock锁
     sleep(&ticks, &tickslock);
+    printf("sys_sleep: after sleep, ticks=%d\n", ticks);
   }
   release(&tickslock);
   return 0;
