@@ -378,3 +378,17 @@ zipball: clean submit-check
 	git archive --verbose --format zip --output lab.zip HEAD
 
 .PHONY: zipball clean grade submit-check
+
+
+# --- Standalone Target for GDB Debugging (FINAL, FULLY CORRECTED VERSION) ---
+
+gdb-symbols.txt: $(UPROGS)
+	@echo "# GDB script to load user program symbols" > gdb-symbols.txt
+	@for prog in $(UPROGS); do \
+		echo "add-symbol-file $$prog 0" >> gdb-symbols.txt; \
+	done
+
+debug: kernel/kernel fs.img gdb-symbols.txt .gdbinit
+	@echo "*** Target: debug. All dependencies are met. Launching QEMU for GDB."
+	@echo "*** Now run 'gdb-multiarch -x .gdbinit' in another window." 1>&2
+	@$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
