@@ -196,7 +196,11 @@ UPROGS=\
 	$U/_zombie\
 	$U/_sleep\
 	$U/_pingpong\
-	$U/_find
+	$U/_find\
+	$U/_xargs\
+	$U/_forkexec\
+	$U/_fork\
+	$U/_copy
 
 
 
